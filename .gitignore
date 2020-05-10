@@ -1,6 +1,5 @@
 # Pre-trained models and word embeddings
-./domain/InferSent/encoder/
-./domain/InferSent/GloVe/
+./domain/InferSent/
 
 # Logs
 log/*
