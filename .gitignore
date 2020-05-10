@@ -1,0 +1,17 @@
+# Pre-trained models and word embeddings
+./domain/InferSent/encoder/
+./domain/InferSent/GloVe/
+
+# Logs
+log/*
+!log/.gitkeep
+
+# Jupyter Notebook drafts
+draft.ipynb
+
+# Caches and autosaves
+__pycache__/
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
