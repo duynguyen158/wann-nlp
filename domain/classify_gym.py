@@ -110,12 +110,14 @@ def kaggle_spam(embedding_style="count", max_features=8):
     z, labels = vectorizer.transform(train_texts, train_labels)
   elif embedding_style == "count":
     # BoW
+    print("spam_count_" + str(max_features))
     from domain.text_vectorizers import BoWVectorizer
     vectorizer = BoWVectorizer(max_features=max_features)
     vectorizer.fit(train_texts)
     z, labels = vectorizer.transform(train_texts, train_labels) 
   elif embedding_style == "lstm":
     # BiLSTM mean/max pooling (default: max)
+    print("spam_lstm_" + str(max_features))
     from domain.text_vectorizers import BiLSTMVectorizer
     vectorizer = BiLSTMVectorizer(vocab_size=max_features)
     z, labels = vectorizer.transform(train_texts, train_labels, bsize=32)
@@ -141,12 +143,14 @@ def imdb(embedding_style="ascii", max_features=128):
     print(labels.shape)
   elif embedding_style == "count":
     # BoW
+    print("imdb_count_" + str(max_features))
     from domain.text_vectorizers import BoWVectorizer
     vectorizer = BoWVectorizer(max_features=max_features)
     vectorizer.fit(train_texts)
     z, labels = vectorizer.transform(train_texts, train_labels)
   elif embedding_style == "lstm":
     # BiLSTM mean/max pooling (default: max)
+    print("imdb_lstm_" + str(max_features))
     from domain.text_vectorizers import BiLSTMVectorizer
     vectorizer = BiLSTMVectorizer(vocab_size=max_features)
     z, labels = vectorizer.transform(train_texts, train_labels, bsize=32)
