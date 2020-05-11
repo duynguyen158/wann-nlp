@@ -223,8 +223,8 @@ def mpi_fork(n):
       OMP_NUM_THREADS="1",
       IN_MPI="1"
     )
-    print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
-    subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    print( ["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] + sys.argv)
+    subprocess.check_call(["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
     return "parent"
   else:
     global nWorker, rank

@@ -11,11 +11,11 @@ games = {}
 
 spam = Game(env_name='Classify_spam',
   actionSelect='softmax', # all, soft, hard
-  input_size=128,
+  input_size=8,
   output_size=2,
   time_factor=0,
   layers=[128,9],
-  i_act=np.full(128,1),
+  i_act=np.full(8,1),
   h_act=[1,3,4,5,6,7,8,9,10], # No step function
   o_act=np.full(2,1),
   weightCap = 2.0,
@@ -41,5 +41,3 @@ L = [list(range(1, imdb.input_size)),\
 label = [item for sublist in L for item in sublist]
 imdb = imdb._replace(in_out_labels=label)
 games['imdb'] = imdb
-
-

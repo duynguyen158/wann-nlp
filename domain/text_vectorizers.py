@@ -86,8 +86,8 @@ class BiLSTMVectorizer():
     self.model.set_w2v_path(W2V_PATH)
     self.model.build_vocab_k_words(vocab_size)
 
-  def transform(self, texts, labels):
-    z = self.model.encode(texts)
+  def transform(self, texts, labels, bsize):
+    z = self.model.encode(texts, bsize=bsize)
     labels = np.array(labels)
     return z, labels
 

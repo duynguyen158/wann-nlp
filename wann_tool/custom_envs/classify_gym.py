@@ -127,7 +127,7 @@ def kaggle_spam_test(embedding_style="ascii", max_features=128):
   (embeddings & labels)
   '''
   import pandas as pd
-  print("...Reading data...")
+  print("...Reading test data...")
   test = pd.read_csv("../data/spam_classify/test.csv")
   test_texts, test_labels = list(test.v2), list(test.v1)
   if embedding_style == "ascii":
@@ -140,14 +140,12 @@ def kaggle_spam_test(embedding_style="ascii", max_features=128):
     from domain.text_vectorizers import BoWVectorizer
     train = pd.read_csv("../data/spam_classify/train.csv")
     train_texts, train_labels = list(train.v2), list(train.v1)
-    print(f"...Count vectorizer -- Vocab size: {max_features}...")
     vectorizer = BoWVectorizer(max_features=max_features)
     vectorizer.fit(train_texts)
     z, labels = vectorizer.transform(test_texts, test_labels)
   elif embedding_style == "lstm":
     # BiLSTM mean/max pooling (default: max)
     from domain.text_vectorizers import BiLSTMVectorizer
-    print(f"...BiLSTM vectorizer -- Vocab size: {max_features}...")
     vectorizer = BiLSTMVectorizer(vocab_size=max_features)
     z, labels = vectorizer.transform(test_texts, test_labels)
   return z, labels
@@ -161,7 +159,7 @@ def imdb_test(embedding_style="ascii", max_features=128):
   import pandas as pd
   print("...Reading data...")
   test = pd.read_csv("../data/sen_imdb/test.csv")
-  test_texts, test_labels = list(test.v2), list(test.v1)
+  test_texts, test_labels = list(test.text), list(test.pos)
   if embedding_style == "ascii":
     # ASCII
     from domain.text_vectorizers import ASCIIVectorizer
@@ -171,15 +169,13 @@ def imdb_test(embedding_style="ascii", max_features=128):
     # BoW
     from domain.text_vectorizers import BoWVectorizer
     train = pd.read_csv("../data/sen_imdb/train.csv")
-    train_texts, train_labels = list(train.v2), list(train.v1)
-    print(f"...Count vectorizer -- Vocab size: {max_features}...")
+    train_texts, train_labels = list(train.text), list(train.pos)
     vectorizer = BoWVectorizer(max_features=max_features)
     vectorizer.fit(train_texts)
     z, labels = vectorizer.transform(test_texts, test_labels)
   elif embedding_style == "lstm":
     # BiLSTM mean/max pooling (default: max)
     from domain.text_vectorizers import BiLSTMVectorizer
-    print(f"...BiLSTM vectorizer -- Vocab size: {max_features}...")
     vectorizer = BiLSTMVectorizer(vocab_size=max_features)
     z, labels = vectorizer.transform(test_texts, test_labels)
   return z, labels
