@@ -1,0 +1,18 @@
+{
+    "task": "imdb",
+    "encoder": "count",
+    "max_features": 16,
+    "alg_nMean": 8,
+    "alg_nReps": 1,
+    "maxGen": 512,
+    "popSize": 180,
+    "prob_crossover": 0.0,
+    "prob_mutAct": 0.25,
+    "prob_addNode": 0.7,
+    "prob_addConn": 0.6,
+    "prob_enable": 0.05,
+    "prob_initEnable": 0.6,
+    "select_cullRatio": 0.5,
+    "select_eliteRatio": 0.2,
+    "select_tournSize": 24
+}
