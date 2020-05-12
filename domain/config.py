@@ -16,7 +16,7 @@ spam = Game(env_name='Classify_spam',
   time_factor=0,
   layers=[128,9],
   i_act=np.full(128,1),   # can vary
-  h_act=[1,6,9],
+  h_act=[1,7,9,12],
   o_act=np.full(2,1),
   weightCap = 2.0,
   noise_bias=0.0,

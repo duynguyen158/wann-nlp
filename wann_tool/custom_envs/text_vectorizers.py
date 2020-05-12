@@ -26,15 +26,11 @@ class ASCIIVectorizer():
     '''
     #print("...Splitting words & aggregating chars...")
     preprocessed = preprocess(texts)
-    first_char_vectorizer = lambda data, func: [[func(w[0]) for w in t] for t in data]
-    mean_vectorizer = lambda data, func: [[np.mean([func(c) for c in w]) for w in t] for t in data]
-
-    func = lambda c: ord(c) if ord(c) <= 255 else 0
 
     if self.char_aggregator == "first":
-      transformed = mean_vectorizer(preprocessed, func)
+      transformed = [list(map(first_char_converter, s)) for s in preprocessed]
     else:
-      transformed = first_char_vectorizer(preprocessed, func)
+      transformed = [list(map(mean_chars_converter, s)) for s in preprocessed]
 
     z = np.array(collate_func(transformed, self.max_features)) / 255
     labels = np.array(labels)
@@ -90,21 +86,34 @@ class BiLSTMVectorizer():
     self.model.set_w2v_path(W2V_PATH)
     self.model.build_vocab_k_words(vocab_size)
 
-  def transform(self, texts, labels):
-    z = self.model.encode(texts)
+  def transform(self, texts, labels, bsize=32):
+    z = self.model.encode(texts, bsize=bsize)
     labels = np.array(labels)
     return z, labels
 
 # --- Utilities ---
+def ascii(c):
+  if ord(c) <= 255:
+    return ord(c) 
+  else: 
+    return 0
+
+def first_char_converter(word):
+  return ascii(word[0])
+
+def mean_chars_converter(word):
+  return np.mean([ascii(c) for c in word])
+
 def preprocess(text_data):
   '''
   Returns a list of lists of preprocessed tokens for each sequence
+
+  Make sure to run `python -c "import nltk; nltk.download('punkt')"` 
+  the first time
   '''
   #print("...Splitting sequences into words...")
-  import spacy as sc 
-  # Make sure to run `spacy download en_core_web_sm` in command line first
-  enModel = sc.load("en_core_web_sm")
-  preprocessed = [[token.text for token in enModel(d)] for d in text_data]
+  import nltk 
+  preprocessed = [nltk.word_tokenize(text) for text in text_data]
   return preprocessed
 
 def collate_func(data, max_features=128):

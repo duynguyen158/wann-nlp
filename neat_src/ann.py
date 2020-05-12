@@ -182,11 +182,11 @@ def applyAct(actId, x):
   Args:
     actId   - (int)   - key to look up table
     x       - (???)   - value to be input into activation
-              [? X ?] - any type or dimensionality
+              [? X 1] - any vector
 
   Returns:
     output  - (float) - value after activation is applied
-              [? X ?] - same dimensionality as input
+              [? X 1] - same dimensionality as input
   """
   if actId == 1:   # Linear
     value = x
@@ -221,6 +221,9 @@ def applyAct(actId, x):
 
   elif actId == 11: # Squared
     value = x**2
+
+  elif actId == 12: # Penalizd Hyperbolic Tangent
+    value = np.maximum(np.tanh(x), 0.25*np.tanh(x))
     
   else:
     value = x
@@ -313,4 +316,3 @@ def importNet(fileName):
   wKey = np.where(wVec!=0)[0] 
 
   return wVec, aVec, wKey
-

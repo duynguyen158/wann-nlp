@@ -30,24 +30,32 @@ record_rgb = False
 if record_rgb:
   import imageio
 
-def make_model(game):
+def make_model(game, model_file, encoder, max_features):
   # can be extended in the future.
-  model = Model(game)
+  model = Model(game, model_file, encoder, max_features)
   return model
 
 class Model:
   ''' simple feedforward model '''
-  def __init__(self, game):
+  def __init__(self, game, model_file, encoder, max_features):
 
     self.env_name = game.env_name
     self.wann_file = game.wann_file
-    self.input_size = game.input_size
     self.output_size = game.output_size
     self.action_select = game.action_select
     self.weight_bias = game.weight_bias
+    self.encoder = encoder
+    self.max_features = max_features
+
+    if encoder == 'ascii' or encoder == 'count':
+      self.input_size = max_features
+    elif encoder == 'lstm':
+      self.input_size = 4096
+    else:
+      self.input_size = game.input_size
 
     #self.wVec, self.aVec, self.wKey = ann.importNet("champions/"+self.wann_file)
-    self.wVec, self.aVec, self.wKey = ann.importNet("../log/test_best.out")
+    self.wVec, self.aVec, self.wKey = ann.importNet(model_file)
 
     self.param_count = len(self.wKey)
 
@@ -57,7 +65,7 @@ class Model:
 
   def make_env(self, seed=-1, render_mode=False):
     self.render_mode = render_mode
-    self.env = make_env(self.env_name, seed=seed, render_mode=render_mode)
+    self.env = make_env(self.env_name, self.encoder, self.max_features, seed=seed, render_mode=render_mode)
 
   def get_action(self, x):
     # if mean_mode = True, ignore sampling.
@@ -186,6 +194,8 @@ def main():
   parser.add_argument('-e', '--eval_steps', type=int, default=100, help='evaluate this number of step if final_mode')
   parser.add_argument('-s', '--seed_start', type=int, default=0, help='initial seed')
   parser.add_argument('-w', '--single_weight', type=float, default=-100, help='single weight parameter')
+  parser.add_argument('-m', '--model_file', type=str, default="../log/test_best.out", help='file path of model architecture')
+  parser.add_argument('-p', '--hyp_name', type=str, help="hyperparameter file name (for encoder & max features info)")
   parser.add_argument('--stdev', type=float, default=2.0, help='standard deviation for weights')
   parser.add_argument('--sweep', type=int, default=-1, help='sweep a set of weights from -2.0 to 2.0 sweep times.')
   parser.add_argument('--lo', type=float, default=-2.0, help='slow side of sweep.')
@@ -201,6 +211,13 @@ def main():
 
   game = config.games[gamename]
 
+  hyp_path = "../p/" + args.hyp_name + ".json"
+  with open(hyp_path) as hyp_f:
+    print("Using encoding method and max_features as in " + hyp_path)
+    hyp = json.load(hyp_f)
+    encoder = hyp['encoder']
+    max_features = hyp['max_features']
+
   filename = args.filename
   if filename != "none":
     use_model = True
@@ -208,7 +225,7 @@ def main():
 
   the_seed = args.seed_start
 
-  model = make_model(game)
+  model = make_model(game, args.model_file, encoder, max_features)
   print('model size', model.param_count)
 
   eval_steps = args.eval_steps
