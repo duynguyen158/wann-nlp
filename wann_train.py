@@ -179,7 +179,10 @@ def slave():
     result - (float)    - fitness value of network
   """
   global hyp  
-  task = WannGymTask(games[hyp['task']], nReps=hyp['alg_nReps'])
+  task = WannGymTask(game=games[hyp['task']],\
+                     nReps=hyp['alg_nReps'],\
+                     encoder=hyp['encoder'],\
+                     max_features=hyp['max_features'])
 
   # Evaluate any weight vectors sent this way
   while True:
@@ -209,7 +212,7 @@ def stopAllWorkers():
   for iWork in range(nSlave):
     comm.send(-1, dest=(iWork)+1, tag=1)
 
-def mpi_fork(n):
+def mpi_fork(n, use_threads):
   """Re-launches the current script with workers
   Returns "parent" for original parent, "child" for MPI children
   (from https://github.com/garymcintire/mpi_util/)
@@ -223,8 +226,12 @@ def mpi_fork(n):
       OMP_NUM_THREADS="1",
       IN_MPI="1"
     )
-    print( ["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] + sys.argv)
-    subprocess.check_call(["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    if use_threads:
+      print( ["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] + sys.argv)
+      subprocess.check_call(["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    else:
+      print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
+      subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
     return "parent"
   else:
     global nWorker, rank
@@ -262,19 +269,22 @@ if __name__ == "__main__":
    help='default hyperparameter file', default='p/default_wann.json')
 
   parser.add_argument('-p', '--hyperparam', type=str,\
-   help='hyperparameter file', default='p/spam.json')
+   help='hyperparameter file', default='p/spam_ascii.json')
 
   parser.add_argument('-o', '--outPrefix', type=str,\
    help='file name for result output', default='test')
   
   parser.add_argument('-n', '--num_worker', type=int,\
    help='number of cores to use', default=2)
+  
+  parser.add_argument('-u', '--use_threads', type=bool,\
+   help='use hardware threads as independent cpus', default=False)
 
   args = parser.parse_args()
 
 
   # Use MPI if parallel
-  if "parent" == mpi_fork(args.num_worker+1): os._exit(0)
+  if "parent" == mpi_fork(args.num_worker+1, args.use_threads): os._exit(0)
 
   main(args)                              
   

@@ -94,7 +94,7 @@ class ClassifyEnv(gym.Env):
 # -- Data Sets ----------------------------------------------------------- -- #
 
 # SPAM CLASSIFICATION
-def kaggle_spam(embedding_style="count", max_features=8):
+def spam(embedding_style, max_features):
   '''
   Return Kaggle spam training data 
   (embeddings & labels)
@@ -105,6 +105,7 @@ def kaggle_spam(embedding_style="count", max_features=8):
   train_texts, train_labels = list(train.v2), list(train.v1)
   if embedding_style == "ascii":
     # ASCII
+    print("spam_ascii_" + str(max_features))
     from domain.text_vectorizers import ASCIIVectorizer
     vectorizer = ASCIIVectorizer(max_features)
     z, labels = vectorizer.transform(train_texts, train_labels)
@@ -124,7 +125,7 @@ def kaggle_spam(embedding_style="count", max_features=8):
   return z, labels
 
 # BINARY SENTIMENT ANALYSIS
-def imdb(embedding_style="ascii", max_features=128):
+def imdb(embedding_style, max_features):
   '''
   Return movie review training data 
   (embeddings & labels)
@@ -135,6 +136,7 @@ def imdb(embedding_style="ascii", max_features=128):
   train_texts, train_labels = list(train.text), list(train.pos)
   if embedding_style == "ascii":
     # ASCII
+    print("imdb_ascii_" + str(max_features))
     from domain.text_vectorizers import ASCIIVectorizer
     vectorizer = ASCIIVectorizer(max_features)
     z, labels = vectorizer.transform(train_texts, train_labels)

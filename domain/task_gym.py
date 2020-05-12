@@ -8,7 +8,7 @@ from neat_src import *
 class GymTask():
   """Problem domain to be solved by neural network. Uses OpenAI Gym patterns.
   """ 
-  def __init__(self, game, paramOnly=False, nReps=1): 
+  def __init__(self, game, encoder, max_features, paramOnly=False, nReps=1): 
     """Initializes task environment
   
     Args:
@@ -19,19 +19,28 @@ class GymTask():
       nReps     - (nReps) - number of trials to get average fitness
     """
     # Network properties
-    self.nInput   = game.input_size
+    if encoder == 'ascii' or encoder == 'count':
+      self.nInput = max_features
+      i_act = np.full(max_features, 1)
+    elif encoder == 'lstm':
+      self.nInput = 4096
+      i_act = np.full(4096, 1)
+    else:
+      self.nInput = game.input_size
+      i_act = game.i_act
+
     self.nOutput  = game.output_size      
     self.actRange = game.h_act
     self.absWCap  = game.weightCap
     self.layers   = game.layers      
-    self.activations = np.r_[np.full(1,1),game.i_act,game.o_act]
+    self.activations = np.r_[np.full(1,1),i_act,game.o_act]
   
     # Environment
     self.nReps = nReps
     self.maxEpisodeLength = game.max_episode_length
     self.actSelect = game.actionSelect
     if not paramOnly:
-      self.env = make_env(game.env_name)
+      self.env = make_env(game.env_name, encoder, max_features)
     
     # Special needs...
     self.needsClosed = (game.env_name.startswith("CartPoleSwingUp"))    
