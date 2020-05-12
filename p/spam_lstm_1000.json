@@ -1,5 +1,7 @@
 {
-    "task": "imdb",
+    "task": "spam",
+    "encoder": "lstm",
+    "max_features": 1000,
     "alg_nMean": 8,
     "alg_nReps": 1,
     "maxGen": 512,

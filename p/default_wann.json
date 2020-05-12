@@ -1,5 +1,7 @@
 {
-    "task":"spam",
+    "task": "spam",
+    "encoder": "ascii",
+    "max_features": 128,
     "alg_wDist": "standard",
     "alg_nVals": 6,
     "alg_nReps": 4,
