@@ -35,7 +35,7 @@ games['spam'] = spam
 
 imdb = spam._replace(\
   env_name='Classify_imdb', input_size=128, output_size=2,\
-  i_act=np.full(128,1), o_act=np.full(2,1))
+  i_act=np.full(128,1), h_act=[1,7,9,12], o_act=np.full(2,1))
 L = [list(range(1, imdb.input_size)),\
      list(range(0, imdb.output_size))]
 label = [item for sublist in L for item in sublist]

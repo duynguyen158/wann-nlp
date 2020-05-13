@@ -7,7 +7,7 @@ import numpy as np
 import sys
 import cv2
 import math
-#from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score
 
 class ClassifyEnv(gym.Env):
   """Classification as an unsupervised OpenAI Gym RL problem.
@@ -27,7 +27,6 @@ class ClassifyEnv(gym.Env):
     self.t_limit = 0    # Number of batches if you need them
     
     self.batch   = batch  # Number of examples per batch / Spam: 75 / iMDb: 400
-    print(batch)
     
     self.seed()
     self.viewer = None
