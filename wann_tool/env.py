@@ -15,17 +15,17 @@ def make_env(env_name, encoder, max_features, seed=-1, render_mode=False):
       train_sentences, train_labels = spam_train(encoder, max_features)
       env = ClassifyEnv(train_sentences, train_labels, batch_size=4458, accuracy_mode=True)
 
-  elif (env_name.startswith("Spam")):
+  elif (env_name.startswith("iMDb")):
     print("iMDbReview_started")
     from custom_envs.classify_gym import ClassifyEnv
     if env_name.startswith("iMDbTEST"):
       from custom_envs.classify_gym import imdb_test
       test_sentences, test_labels = imdb_test(encoder, max_features)
-      env = ClassifyEnv(test_sentences, test_labels, batch_size=1114, accuracy_mode=True)
+      env = ClassifyEnv(test_sentences, test_labels, batch_size=25000, accuracy_mode=True)
     elif env_name.startswith("iMDbTRAIN"):
       from custom_envs.classify_gym import imdb_train
       train_sentences, train_labels = imdb_train(encoder, max_features)
-      env = ClassifyEnv(train_sentences, train_labels, batch_size=4458, accuracy_mode=True)
+      env = ClassifyEnv(train_sentences, train_labels, batch_size=25000, accuracy_mode=True)
 
 
   if (seed >= 0):

@@ -14,7 +14,7 @@ class ClassifyEnv(gym.Env):
   Includes scikit-learn digits dataset, MNIST dataset
   """
 
-  def __init__(self, trainSet, target):
+  def __init__(self, trainSet, target, batch):
     """
     Data set is a tuple of 
     [0] input data: [nSamples x nInputs]
@@ -26,7 +26,8 @@ class ClassifyEnv(gym.Env):
     self.t = 0          # Current batch number
     self.t_limit = 0    # Number of batches if you need them
     
-    self.batch   = 75  # Number of examples per batch / MNIST: 1000 / Spam: 75
+    self.batch   = batch  # Number of examples per batch / Spam: 75 / iMDb: 400
+    print(batch)
     
     self.seed()
     self.viewer = None

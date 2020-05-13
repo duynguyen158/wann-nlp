@@ -11,11 +11,11 @@ def make_env(env_name, encoder, max_features, seed=-1, render_mode=False):
     if env_name.endswith("spam"):
       from domain.classify_gym import spam
       trainSet, target = spam(encoder, max_features)
+      env = ClassifyEnv(trainSet, target, 75)  
     elif env_name.endswith("imdb"):
       from domain.classify_gym import imdb
       trainSet, target = imdb(encoder, max_features)
-
-    env = ClassifyEnv(trainSet,target)  
+      env = ClassifyEnv(trainSet, target, 400)  
 
   if (seed >= 0):
     domain.seed(seed)
