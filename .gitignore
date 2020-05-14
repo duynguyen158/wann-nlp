@@ -2,7 +2,7 @@
 ./domain/InferSent/
 
 # Logs
-log/*
+log/
 !log/.gitkeep
 
 # Jupyter Notebook drafts
