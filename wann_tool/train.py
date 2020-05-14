@@ -62,12 +62,12 @@ SOLUTION_PACKET_SIZE = (5+num_params)*num_worker_trial
 RESULT_PACKET_SIZE = 4*num_worker_trial
 ###
 
-def initialize_settings(sigma_init=0.1, sigma_decay=0.9999):
+def initialize_settings(model_file, encoder, max_features, sigma_init=0.1, sigma_decay=0.9999):
   global population, filebase, game, model, num_params, es, PRECISION, SOLUTION_PACKET_SIZE, RESULT_PACKET_SIZE
   population = num_worker * num_worker_trial
-  filebase = 'log/'+gamename+'.'+optimizer+'.'+str(num_episode)+'.'+str(population)
+  filebase = 'log/'+gamename+'.'+encoder+'.'+str(max_features)+'.'+optimizer+'.'+str(num_episode)+'.'+str(population)
   game = config.games[gamename]
-  model = make_model(game)
+  model = make_model(game, model_file, encoder, max_features)
   num_params = model.param_count
   print("size of model", num_params)
 
@@ -390,7 +390,14 @@ def main(args):
   cap_time_mode= (args.cap_time == 1)
   seed_start = args.seed_start
 
-  initialize_settings(args.sigma_init, args.sigma_decay)
+  hyp_path = "../p/" + args.hyp_name + ".json"
+  with open(hyp_path) as hyp_f:
+    print("Using encoding method and max_features as in " + hyp_path)
+    hyp = json.load(hyp_f)
+    encoder = hyp['encoder']
+    max_features = hyp['max_features']
+
+  initialize_settings(args.model_file, encoder, max_features, args.sigma_init, args.sigma_decay)
 
   sprint("process", rank, "out of total ", comm.Get_size(), "started")
   if (rank == 0):
@@ -398,7 +405,7 @@ def main(args):
   else:
     slave()
 
-def mpi_fork(n):
+def mpi_fork(n, use_threads):
   """Re-launches the current script with workers
   Returns "parent" for original parent, "child" for MPI children
   (from https://github.com/garymcintire/mpi_util/)
@@ -412,8 +419,12 @@ def mpi_fork(n):
       OMP_NUM_THREADS="1",
       IN_MPI="1"
     )
-    print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
-    subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    if use_threads:
+      print( ["mpirun", "--use-hwthread-cpus" , "-np", str(n), sys.executable] + sys.argv)
+      subprocess.check_call(["mpirun", "--use-hwthread-cpus", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    else:
+      print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
+      subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
     return "parent"
   else:
     global nworkers, rank
@@ -437,7 +448,10 @@ if __name__ == "__main__":
   parser.add_argument('-s', '--seed_start', type=int, default=111, help='initial seed')
   parser.add_argument('--sigma_init', type=float, default=0.10, help='sigma_init')
   parser.add_argument('--sigma_decay', type=float, default=0.999, help='sigma_decay')
+  parser.add_argument('-u', '--use_threads', type=bool, help='use hardware threads as independent cpus', default=False)
+  parser.add_argument('-m', '--model_file', type=str, default="../log/test_best.out", help='file path of model architecture')
+  parser.add_argument('-p', '--hyp_name', type=str, help="hyperparameter file name (for encoder & max features info)")
 
   args = parser.parse_args()
-  if "parent" == mpi_fork(args.num_worker+1): os.exit()
+  if "parent" == mpi_fork(args.num_worker+1, args.use_threads): os.exit()
   main(args)

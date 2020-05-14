@@ -198,8 +198,8 @@ def main():
   parser.add_argument('-p', '--hyp_name', type=str, help="hyperparameter file name (for encoder & max features info)")
   parser.add_argument('--stdev', type=float, default=2.0, help='standard deviation for weights')
   parser.add_argument('--sweep', type=int, default=-1, help='sweep a set of weights from -2.0 to 2.0 sweep times.')
-  parser.add_argument('--lo', type=float, default=-2.0, help='slow side of sweep.')
-  parser.add_argument('--hi', type=float, default=2.0, help='high side of sweep.')
+  parser.add_argument('--lo', type=float, default=-5.0, help='slow side of sweep.')
+  parser.add_argument('--hi', type=float, default=5.0, help='high side of sweep.')
 
   args = parser.parse_args()
 

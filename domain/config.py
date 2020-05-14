@@ -11,11 +11,11 @@ games = {}
 
 spam = Game(env_name='Classify_spam',
   actionSelect='softmax', # all, soft, hard
-  input_size=128,         # can vary
+  input_size=8,         # can vary
   output_size=2,
   time_factor=0,
   layers=[128,9],
-  i_act=np.full(128,1),   # can vary
+  i_act=np.full(8,1),   # can vary
   h_act=[1,7,9,12],
   o_act=np.full(2,1),
   weightCap = 2.0,
