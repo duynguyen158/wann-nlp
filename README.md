@@ -20,8 +20,11 @@ Python 3.7.7. If `python` doesn't work, try `python3`
 
 2. Install OpenMPI, OpenAI Gym, scikit-learn, pandas, and NumPy
 `pip install mpi4py` (3.0.3)
+
 `pip install gym` (0.17.1)
+
 `pip install scikit-learn` (0.22.1) 
+
 `pip install numpy` (1.18.1)
 
 3. Install nltk and download nltk tokenizer
@@ -31,7 +34,9 @@ Python 3.7.7. If `python` doesn't work, try `python3`
 4. (If you'd like to work with with BiLSTM embeddings) Download InferSent, GloVe and pre-trained GloVe model
 * InferSent
 `cd domain`
+
 `git clone https://github.com/facebookresearch/InferSent.git InferSent`
+
 * GloVe (from domain)
 `cd InferSent`
 `mkdir GloVe`
