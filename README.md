@@ -1,18 +1,14 @@
 # Weight Agnostic Neural Networks (Fork for NLP)
 Fork of prettyNeatWann in Adam Gaier and David Ha's [WANN](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease) (weight-agnostic neural networks) repository, with some additions that enable simple text classification tasks:
 
-- Spam Classification (Data: [Kaggle]([https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#](https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#))). *This is the only task included in the paper.*
-- Binary Sentiment Analysis (Data: [Stanford]([https://ai.stanford.edu/~amaas/data/sentiment/](https://ai.stanford.edu/~amaas/data/sentiment/)))
+- Spam Classification(Data: [Kaggle](https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#](https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#).) *This is the only task included in the paper.*
+- Binary Sentiment Analysis (Data: [Stanford][https://ai.stanford.edu/~amaas/data/sentiment/](https://ai.stanford.edu/~amaas/data/sentiment/).)
 
 Three levels of sentence embeddings are offered:
 
-- ASCII: extended-ASCII code of first character of each token
-- BoW: token counts using training data as corpus 
-
-Varying vocabulary size leads to changes in the dimensionality of incoming vectors, thus changing quantity & quality of prior information. *This is the only embedding style included in the paper.*
-- BiLSTM with mean/max pooling: using [Conneau et al.]([https://arxiv.org/pdf/1705.02364.pdf](https://arxiv.org/pdf/1705.02364.pdf))'s pre-trained model on GloVe
-
-Varing vocabulary size leads to changes in quality of prior information, since incoming vectors are always of size 4096. *We lack sufficient computational power to perform architectural search on such large vectors, but the code is ready.*
+- ASCII: extended-ASCII code of first character of each token.
+- BoW: token counts using training data as corpus. Varying vocabulary size leads to changes in the dimensionality of incoming vectors, thus changing quantity & quality of prior information. *This is the only embedding style included in the paper.*
+- BiLSTM with mean/max pooling: using [Conneau et al.]([https://arxiv.org/pdf/1705.02364.pdf](https://arxiv.org/pdf/1705.02364.pdf))'s pre-trained model on GloVe. Varing vocabulary size leads to changes in quality of prior information, since incoming vectors are always of size 4096. *We lack sufficient computational power to perform architectural search on such large vectors, but the code is ready.*
 
 
 ## Setting things up
