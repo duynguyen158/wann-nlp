@@ -4,7 +4,7 @@ import gym
 def make_env(env_name, encoder, max_features, seed=-1, render_mode=False):
 
   if (env_name.startswith("Spam")):
-    print("KaggleSpam_started")
+    print("Spam_started")
     from custom_envs.classify_gym import ClassifyEnv
     if env_name.startswith("SpamTEST"):
       from custom_envs.classify_gym import spam_test
