@@ -1,89 +1,56 @@
 # Weight Agnostic Neural Networks (Fork for NLP)
+Fork of prettyNeatWann in Adam Gaier and David Ha's [WANN](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease) (weight-agnostic neural networks) repository, with some additions that enable simple text classification tasks:
 
-*Fork of prettyNeatWann in Gaier and Ha's [WANN](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease) repository, with some additions that enable NLP classification tasks.*
+- Spam Classification (Data: [Kaggle]([https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#](https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#))). *This is the only task included in the paper.*
+- Binary Sentiment Analysis (Data: [Stanford]([https://ai.stanford.edu/~amaas/data/sentiment/](https://ai.stanford.edu/~amaas/data/sentiment/)))
 
-Weight Agnostic Networks: network topologies evolved to work with a variety of shared weights. Adapted from the [prettyNEAT](../prettyNEAT) package. If you are just interested in seeing more details of how WANNs were implemented the [WANN](../WANN) repo is a cleaner self-contained version. This fork contains and adapts code used in the original NEAT (species, crossover, etc.) -- so if you are looking to extend or play around with WANNs you are in the right place.
+Three levels of sentence embeddings are offered:
 
-
-## Dependencies
-
-Core algorithm tested with:
-
-- Python 3.5.3
-
-- NumPy 1.15.2 (`pip install numpy`)
-
-- mpi4py 3.0.1 (`pip install mpi4py`)
-
-- OpenAI Gym 0.9.6 (`pip install gym` -- installation details [here](https://github.com/openai/gym))
+- ASCII: extended-ASCII code of first character of each token
+- BoW: token counts using training data as corpus 
+Varying vocabulary size leads to changes in the dimensionality of incoming vectors, thus changing quantity & quality of prior information. *This is the only embedding style included in the paper.*
+- BiLSTM with mean/max pooling: using [Conneau et al.]([https://arxiv.org/pdf/1705.02364.pdf](https://arxiv.org/pdf/1705.02364.pdf))'s pre-trained model on GloVe
+Varing vocabulary size leads to changes in quality of prior information, since incoming vectors are always of size 4096. *We lack sufficient computational power to perform architectural search on such large vectors, but the code is ready.*
 
 
-Domains tested with:
+## Setting things up
+Python 3.7.7. If `python` doesn't work, try `python3`
+1. Fork this repostiory
+`git clone https://github.com/duynguyen158/wann-nlp.git`
 
-- Cart-pole Swing-up (included, but requires OpenAI gym)
+2. Install OpenMPI, OpenAI Gym, scikit-learn, pandas, and NumPy
+`pip install mpi4py` (3.0.3)
+`pip install gym` (0.17.1)
+`pip install scikit-learn` (0.22.1) 
+`pip install numpy` (1.18.1)
 
-- Bipedal Walker: Box2d (see OpenAI gym installation)
+3. Install nltk and download nltk tokenizer
+`pip install nltk` (3.4.5)
+`python -c 'import nltk; nltk.download("punkt")'`
 
-- Quadruped (Ant) Walker: PyBullet 1.6.3 (`pip install pybullet`)
+4. (If you'd like to work with with BiLSTM embeddings) Download InferSent, GloVe and pre-trained GloVe model
+* InferSent
+`cd domain`
+`git clone https://github.com/facebookresearch/InferSent.git InferSent`
+* GloVe (from domain)
+`cd InferSent`
+`mkdir GloVe`
+`cd GloVe`
+`curl -Lo domain/InferSent/GloVe/glove.840B.300d.zip http://nlp.stanford.edu/data/glove.840B.300d.zip`
+`unzip domain/InferSent/GloVe/glove.840B.300d.zip -d domain/InferSent/GloVe/`
+* InferSent pre-trained model on GloVe (from domain)
+`cd InferSent`
+`mkdir encoder`
+`cd encoder`
+`curl -Lo infersent1.pk https://dl.fbaipublicfiles.com/infersent/infersent1.pkl`
+* PyTorch
+`pip install torch` (1.4.0)
 
-- MNIST: Mnist utilities 0.2.2 (`pip install mnist`)
-
-- VAE Racer: 
-    - Tensorflow 1.8 (`pip install tensorflow==1.8.0`)
-    - Pretrained VAE (in [wannRelease](../) -- copy to root to use, e.g: `cp -r ../vae .`)
-
-
-
-## Training Weight Agnostic Neural Networks
-
-To get started and see that everything is set up you can test the swing up domain:
-
+## Training WANNs
+For example, enter
 ```
-python wann_train.py
+python wann_train.py -p p/spam_bow_8.json -n 8
 ```
+to start performing architectural search on the Kaggle spam training set using BoW sentence embeddings with vocabulary size 8, employing 8 workers in the process. 
 
-which is the same as the default hyperparameter:
-
-```
-python wann_train.py -p p/laptop_swing.json -n 8
-```
-
-Where `8` is the number of workers you have on your computer, and `p/laptop_swing.json` contains hyperparameters.
-
-Evaluation of the population is embarrassingly parallel so every extra core you have will really speed things up. Here is an example training curve on cart-pole with a population of 64 on an 8 core laptop:
-
-![alt text](log/wann_run.png)
-
-Where `Fitness` is the mean reward earned over all trials and weight values. `Median Fitness` is the fitness of the median performing member of the population, `Max Fitness` is the fitness of the best performing member of the population, `Top Fitness` is the best performing member ever found. `Peak Fitness` is the mean reward earned by the best performing member with its best performing weight value. To reproduce this graph see this [jupyter notebook](../WANN/log/viewRunStats.ipynb).
-
-The full list of hyperparameters and their meaning is explained in [hypkey.txt](p/hypkey.txt)
-
-## Testing and Tuning Weight Agnostic Neural Networks
-
-To view or test a WANN:
-
-```
-python wann_test.py -p p/swingup.json -i champions/swing.out --nReps 3 --view True
-```
-
-WANNs are saved as 2D numpy arrays and can be retested, train, and viewed using the [WANNTool](../WANNTool) provided.
-
----
-
-### Citation
-For attribution in academic contexts, please cite this work as
-
-```
-@article{wann2019,
-  author = {Adam Gaier and David Ha},  
-  title  = {Weight Agnostic Neural Networks},  
-  eprint = {arXiv:1906.04358},  
-  url    = {https://weightagnostic.github.io},  
-  note   = "\url{https://weightagnostic.github.io}",  
-  year   = {2019}  
-}
-```
-
-## Disclaimer
-
-This is not an official Google product.
+For further hyperparameter tuning, edit JSON files in the `p` folder.
