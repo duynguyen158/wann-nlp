@@ -40,7 +40,7 @@ cd domain
 git clone https://github.com/facebookresearch/InferSent.git InferSent
 ```
 
-* GloVe (from domain)
+* GloVe (from `domain`)
 ```
 cd InferSent
 mkdir GloVe
@@ -48,7 +48,7 @@ cd GloVe
 curl -Lo glove.840B.300d.zip http://nlp.stanford.edu/data/glove.840B.300d.zip
 unzip glove.840B.300d.zip -d domain/InferSent/GloVe/
 ```
-* InferSent pre-trained model on GloVe (from domain)
+* InferSent pre-trained model on GloVe (from `domain`)
 ```
 cd InferSent
 mkdir encoder
@@ -68,4 +68,8 @@ to start performing architectural search on the Kaggle spam training set using B
 
 For further hyperparameter tuning, edit JSON files in the `p` folder.
 
-WANNs are stored as 2D NumPy arrays.
+WANNs are stored as 2D NumPy arrays. 
+
+
+## Evaluating & Fine-Tuning WANNs
+Go to `wann_tool`
