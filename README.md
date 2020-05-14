@@ -1,7 +1,7 @@
 # Weight Agnostic Neural Networks (Fork for NLP)
 Fork of prettyNeatWann in Adam Gaier and David Ha's [WANN](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease) (weight-agnostic neural networks) repository, with some additions that enable simple text classification tasks:
 
-- Spam Classification(Data: [Kaggle](https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#).) *This is the only task included in the paper.*
+- Spam Classification (Data: [Kaggle](https://www.kaggle.com/uciml/sms-spam-collection-dataset/data#).) *This is the only task included in the paper.*
 - Binary Sentiment Analysis (Data: [Stanford](https://ai.stanford.edu/~amaas/data/sentiment/).)
 
 Three levels of sentence embeddings are offered:
@@ -57,6 +57,7 @@ curl -Lo infersent1.pk https://dl.fbaipublicfiles.com/infersent/infersent1.pkl
 ```
 * PyTorch
 `pip install torch` (1.4.0)
+
 
 ## Training WANNs
 For example, enter
