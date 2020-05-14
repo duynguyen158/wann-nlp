@@ -8,7 +8,7 @@ Three levels of sentence embeddings are offered:
 
 - ASCII: extended-ASCII code of first character of each token.
 - BoW: token counts using training data as corpus. Varying vocabulary size leads to changes in the dimensionality of incoming vectors, thus changing quantity & quality of prior information. *This is the only embedding style included in the paper.*
-- BiLSTM with mean/max pooling: using [Conneau et al.]([https://arxiv.org/pdf/1705.02364.pdf](https://arxiv.org/pdf/1705.02364.pdf))'s pre-trained model on GloVe. Varing vocabulary size leads to changes in quality of prior information, since incoming vectors are always of size 4096. *We lack sufficient computational power to perform architectural search on such large vectors, but the code is ready.*
+- BiLSTM with mean/max pooling: using [Conneau et al.](https://arxiv.org/abs/1705.02364)'s pre-trained model on GloVe. Varing vocabulary size leads to changes in quality of prior information, since incoming vectors are always of size 4096. *We lack sufficient computational power to perform architectural search on such large vectors, but the code is ready.*
 
 
 ## Setting things up
