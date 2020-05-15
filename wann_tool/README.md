@@ -24,4 +24,4 @@ Fine-tuned weights are stored in `log` as JSON files.
 
 
 ## Evaluating WANNs (fine-tuned)
-Similar to single-weight configuration, but also add the `-f` argument to specify the path of JSON weight file.
+Similar to single-weight configuration, but remove `--sweep` and `-f` to specify the path of JSON weight file.
