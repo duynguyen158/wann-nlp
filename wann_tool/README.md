@@ -18,7 +18,7 @@ More command-line arguments are available in `model.py`.
 
 
 ## Fine-Tune WANNs
-Refer to [WANNTool](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease/WANNTool). `-m` and `-p` arguments are also available to specify model path and model's original hyperparameters. We used CMA-ES as the optimization method.
+Refer to [WANNTool](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease/WANNTool). `-m` and `-p` arguments are also available to specify model path and model's original hyperparameters. We used CMA-ES as the optimization method with standard deviation 0.5, like Gaier and Ha.
 
 Fine-tuned weights are stored in `log` as JSON files.
 
