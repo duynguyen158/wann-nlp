@@ -158,3 +158,69 @@ def imdb(embedding_style, max_features):
     vectorizer = BiLSTMVectorizer(vocab_size=max_features)
     z, labels = vectorizer.transform(train_texts, train_labels, bsize=32)
   return z, labels
+
+
+### Spectrogram dataset
+import skimage.measure
+from scipy.io import wavfile
+from scipy import signal
+from sklearn.model_selection import train_test_split
+import glob
+
+def create_spectrogram(file_name, window_size=20, step_size=10, eps=1e-10):
+    """Creates a spectrogram from audio file"""
+    sample_rate, audio = wavfile.read(file_name)
+    
+    nperseg = int(round(window_size * sample_rate / 1e3))
+    noverlap = int(round(step_size * sample_rate / 1e3))
+    _, _, spec = signal.spectrogram(audio,  fs=sample_rate,
+                                            window='hann',
+                                            nperseg=nperseg,
+                                            noverlap=noverlap,
+                                            detrend=False)
+
+    # Create log spectrogram
+    spectrogram = np.log(spec.astype(np.float32) + eps)
+
+    # Max pooling
+    spectrogram = skimage.measure.block_reduce(spectrogram, (13, 13), np.max)
+    
+    # Resize to 8x8 and flatten
+    spectrogram = cv2.resize(spectrogram, (8,8), cv2.INTER_CUBIC).flatten()
+
+    return spectrogram
+
+ 
+def speech_mnist():
+  print("Creating speech_mnist dataset")
+  X = np.empty((2350*10, 64))
+  y = np.empty((2350*10))
+  numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+  for n, number in enumerate(numbers):
+      paths = glob.glob(f"datasets/speech_mnist/{number}/*.wav")
+      paths = sorted(paths)
+      for i, path in enumerate(paths):
+          X[n*2350+i,:] = create_spectrogram(path).flatten()
+          y[n*2350+i] = n
+  Xtr, Xte, ytr, yte = train_test_split(X,y,test_size=0.2,random_state=123)
+  print("done")
+  return Xte, yte.astype(np.uint8)
+  return Xtr, ytr.astype(np.uint8)
+
+def speech_yesno():
+  print("Creating speech_yesno dataset")
+  X = np.empty((2375*2, 64))
+  y = np.empty((2375*2))
+  categories = ['no', 'yes']
+  for i, cat in enumerate(categories):
+      paths = glob.glob(f"datasets/speech_yesno/{cat}/*.wav")
+      paths = sorted(paths)
+      print(len(paths))
+      for j, path in enumerate(paths):
+          X[i*2375+j,:] = create_spectrogram(path).flatten()
+          y[i*2375+j] = i
+  Xtr, Xte, ytr, yte = train_test_split(X,y,test_size=0.2,random_state=123)
+  print("done")
+  return Xte, yte.astype(np.uint8)
+  return Xtr, ytr.astype(np.uint8)
+  
