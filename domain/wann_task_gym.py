@@ -81,16 +81,17 @@ class WannGymTask(GymTask):
 
     # Get reward from 'reps' rollouts -- test population on same seeds
     reward = np.empty((nRep,nVals))
+    acc = np.empty((nRep,nVals))
     for iRep in range(nRep):
       for iVal in range(nVals):
         wMat = self.setWeights(wVec,wVals[iVal])
         if seed == -1:
-          reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed,view=view)
+          reward[iRep,iVal], acc[iRep,iVal] = self.testInd(wMat, aVec, seed=seed,view=view)
         else:
-          reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed+iRep,view=view)
+          reward[iRep,iVal], acc[iRep,iVal] = self.testInd(wMat, aVec, seed=seed+iRep,view=view)
           
     if returnVals is True:
-      return np.mean(reward,axis=0), wVals
-    return np.mean(reward,axis=0)
+      return np.mean(reward,axis=0), wVals, np.mean(acc, axis=0)
+    return np.mean(reward,axis=0), np.mean(acc, axis=0)
  
 

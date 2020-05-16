@@ -70,6 +70,7 @@ class ClassifyEnv(gym.Env):
     #p = np.argmax(action, axis=1)
     #print(accuracy_score(y, p))
 
+    accuracy = np.mean(np.argmax(action, axis=1) == y)
     log_likelihood = -np.log(action[range(m),y])
     loss = np.sum(log_likelihood) / m
     reward = -loss
@@ -88,7 +89,7 @@ class ClassifyEnv(gym.Env):
       done = True
 
     obs = self.state
-    return obs, reward, done, {}
+    return obs, reward, done, {}, accuracy
 
 
 # -- Data Sets ----------------------------------------------------------- -- #
