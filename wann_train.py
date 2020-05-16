@@ -27,11 +27,14 @@ def master():
 
   for gen in range(hyp['maxGen']):        
     pop = alg.ask()            # Get newly evolved individuals from NEAT  
-    reward = batchMpiEval(pop)  # Send pop to be evaluated by workers
+    reward, accuracy = batchMpiEval(pop)  # Send pop to be evaluated by workers
     alg.tell(reward)           # Send fitness to NEAT    
 
     data = gatherData(data,alg,gen,hyp)
-    print(gen, '\t', data.display())
+    max_acc = np.max(accuracy)
+    avg_acc = np.mean(accuracy)
+    print(gen, '\t', data.display(), \
+      f"| Best acc: {max_acc:.4f} | Avg acc: {avg_acc:.4f}")
 
   # Clean up and data gathering at run end
   data = gatherData(data,alg,gen,hyp,savePop=True)
@@ -130,6 +133,7 @@ def batchMpiEval(pop, sameSeedForEachIndividual=True):
     seed = np.random.randint(1000)
 
   reward = np.empty( (nJobs,hyp['alg_nVals']), dtype=np.float64)
+  accuracy = np.empty((nJobs, hyp['alg_nVals']), dtype=np.float64)
   i = 0 # Index of fitness we are filling
   for iBatch in range(nBatch): # Send one batch of individuals
     for iWork in range(nSlave): # (one to each worker if there)
@@ -159,9 +163,9 @@ def batchMpiEval(pop, sameSeedForEachIndividual=True):
       if i < nJobs:
         workResult = np.empty(hyp['alg_nVals'], dtype='d')
         comm.Recv(workResult, source=iWork)
-        reward[i,:] = workResult
+        reward[i,:], accuracy[i,:] = workResult
       i+=1
-  return reward
+  return reward, accuracy
 
 def slave():
   """Evaluation process: evaluates networks sent from master process. 
@@ -196,8 +200,8 @@ def slave():
       comm.Recv(aVec, source=0,  tag=4) # recieve it
       seed = comm.recv(source=0, tag=5) # random seed as int
 
-      result = task.getFitness(wVec,aVec,hyp,seed=seed) # process it
-      comm.Send(result, dest=0)            # send it back
+      result, accuracy = task.getFitness(wVec,aVec,hyp,seed=seed) # process it
+      comm.Send(np.array([result,accuracy]), dest=0)            # send it back
 
     if n_wVec < 0: # End signal recieved
       print('Worker # ', rank, ' shutting down.')
