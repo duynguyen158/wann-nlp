@@ -12,8 +12,6 @@ Three levels of sentence embeddings are offered:
 - BoW: token counts using training data as corpus. Varying vocabulary size leads to changes in the dimensionality of incoming vectors, thus changing quantity & quality of prior information. *This is the only embedding style included in the paper.*
 - BiLSTM with mean/max pooling: using [Conneau et al.](https://arxiv.org/abs/1705.02364)'s pre-trained model on GloVe. Varing vocabulary size leads to changes in quality of prior information, since incoming vectors are always of size 4096. *We lack sufficient computational power to perform architectural search on such large vectors, but the code is ready.*
 
-For speech recognition adaptation, check out [Andrew Hu's repository](https://github.com/andrewhu/wann-nlp/?fbclid=IwAR2jxZv8_JHCuiSBAJcfuFg4yVnI2HIZaoCAr-D2A_FotYltebtsH_EUZVU).
-
 
 ## Setting things up
 Python 3.7.7. If `python` doesn't work, try `python3`
@@ -70,7 +68,7 @@ python wann_train.py -p p/spam_bow_8.json -n 8
 ```
 to start performing architectural search on the Kaggle spam training set using BoW sentence embeddings with vocabulary size 8, employing 8 workers in the process. 
 
-For further hyperparameter tuning, edit JSON files in the `p` folder.
+For further hyperparameter tuning, edit JSON files in the `p` folder. Speech recognition configuration JSONs are also available
 
 WANNs are stored as 2D NumPy arrays. 
 
