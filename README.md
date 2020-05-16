@@ -4,6 +4,8 @@ Fork of prettyNeatWann in Adam Gaier and David Ha's [WANN](https://github.com/go
 - Spam Classification (Data: [Almeida and Hidalgo](http://www.dt.fee.unicamp.br/~tiago/smsspamcollection/).) *This is the only task included in the paper.*
 - Binary Sentiment Analysis (Data: [Stanford](https://ai.stanford.edu/~amaas/data/sentiment/).)
 
+![](splash.jpg)
+
 Three levels of sentence embeddings are offered:
 
 - ASCII: extended-ASCII code of first character of each token.
