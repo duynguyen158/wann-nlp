@@ -1,7 +1,7 @@
 # Weight Agnostic Neural Networks (Fork for NLP)
-Fork of prettyNeatWann in Adam Gaier and David Ha's [WANN](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease) (weight-agnostic neural networks) repository, with some additions that enable simple text classification tasks:
+Fork of prettyNeatWann in Adam Gaier and David Ha's [WANN](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease) (weight-agnostic neural networks) repository, with some additions that enable speech recognition and two simple text classification tasks:
 
-- Spam Classification (Data: [Almeida and Hidalgo](http://www.dt.fee.unicamp.br/~tiago/smsspamcollection/).) *This is the only task included in the paper.*
+- Spam Classification (Data: [Almeida and Hidalgo](http://www.dt.fee.unicamp.br/~tiago/smsspamcollection/).) *This is the only task included in our [paper](https://drive.google.com/file/d/10o0PHSY7j3en9O24zZRwE7jBycIrJXMV/view?usp=sharing).*
 - Binary Sentiment Analysis (Data: [Stanford](https://ai.stanford.edu/~amaas/data/sentiment/).)
 
 ![](splash.jpg)
