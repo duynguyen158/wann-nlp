@@ -1,5 +1,5 @@
 # WANN tool
-An adaptaion of [WANNTool](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease/WANNTool) and [estool](https://github.com/hardmaru/estool)
+An adaptation of [WANNTool](https://github.com/google/brain-tokyo-workshop/tree/master/WANNRelease/WANNTool) and [estool](https://github.com/hardmaru/estool)
 
 
 ## Setting things up
